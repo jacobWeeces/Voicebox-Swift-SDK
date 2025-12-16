@@ -9,8 +9,8 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "VoiceBox",
-            targets: ["VoiceBox"]
+            name: "VoiceBoxSDK",
+            targets: ["VoiceBoxSDK"]
         )
     ],
     dependencies: [
@@ -18,15 +18,15 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "VoiceBox",
+            name: "VoiceBoxSDK",
             dependencies: [
                 .product(name: "Supabase", package: "supabase-swift")
             ],
-            path: "Sources/VoiceBox"
+            path: "Sources/VoiceBoxSDK"
         ),
         .testTarget(
-            name: "VoiceBoxTests",
-            dependencies: ["VoiceBox"]
+            name: "VoiceBoxSDKTests",
+            dependencies: ["VoiceBoxSDK"]
         )
     ]
 )

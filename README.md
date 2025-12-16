@@ -14,7 +14,15 @@ https://github.com/jacobWeeces/Voicebox-Swift-SDK.git
 **Package.swift:**
 ```swift
 dependencies: [
-    .package(url: "https://github.com/jacobWeeces/Voicebox-Swift-SDK.git", from: "1.0.0")
+    .package(url: "https://github.com/jacobWeeces/Voicebox-Swift-SDK.git", from: "1.2.0")
+],
+targets: [
+    .target(
+        name: "YourApp",
+        dependencies: [
+            .product(name: "VoiceBoxSDK", package: "Voicebox-Swift-SDK")
+        ]
+    )
 ]
 ```
 
@@ -28,7 +36,7 @@ dependencies: [
 
 ```swift
 import SwiftUI
-import VoiceBox
+import VoiceBoxSDK
 
 @main
 struct MyApp: App {

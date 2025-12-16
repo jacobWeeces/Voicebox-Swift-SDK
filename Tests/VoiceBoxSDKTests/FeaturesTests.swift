@@ -1,5 +1,5 @@
 import XCTest
-@testable import VoiceBox
+@testable import VoiceBoxSDK
 
 final class FeaturesTests: XCTestCase {
 
