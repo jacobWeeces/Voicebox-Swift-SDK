@@ -1,8 +1,5 @@
 import Foundation
 import SwiftUI
-import os
-
-private let logger = Logger(subsystem: "io.voicebox.sdk", category: "feedback")
 
 @MainActor
 public final class FeedbackViewModel: ObservableObject {
@@ -61,19 +58,19 @@ public final class FeedbackViewModel: ObservableObject {
                 VoiceBox.shared.currentUser = try await api.getOrCreateUser()
             }
 
-            logger.debug("Loading feedback for user: \(VoiceBox.shared.currentUser?.id.uuidString ?? "nil", privacy: .private)")
+            print("[VoiceBox] Loading feedback for user: \(VoiceBox.shared.currentUser?.id.uuidString ?? "nil")")
 
             async let feedbackTask = api.fetchFeedback()
             async let announcementTask = api.fetchAnnouncement()
 
             let (feedback, announcement) = try await (feedbackTask, announcementTask)
 
-            logger.debug("Loaded \(feedback.count) feedback items")
+            print("[VoiceBox] Loaded \(feedback.count) feedback items")
 
             self.feedbackList = feedback
             self.announcement = announcement
         } catch {
-            logger.error("Error loading feedback: \(error.localizedDescription)")
+            print("[VoiceBox] Error loading feedback: \(error)")
             self.error = error
         }
 

@@ -22,8 +22,8 @@ public struct Configuration {
 
     // MARK: - Features
 
-    /// Feature toggles
-    public var features = Features.full
+    /// Feature toggles (fetched from server)
+    public var features = Features.allEnabled
 
     // MARK: - Theme
 

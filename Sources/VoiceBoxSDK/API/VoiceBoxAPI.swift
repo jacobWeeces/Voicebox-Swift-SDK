@@ -250,10 +250,11 @@ public final class VoiceBoxAPI {
     func fetchRoadmap() async throws -> [RoadmapItem] {
         let client = try client
 
+        // Explicitly select public fields only - excludes developer_notes (private)
         let items: [RoadmapItem] = try await client
             .from("roadmap_items")
             .select("""
-                *,
+                id, project_id, feedback_id, title, description, stage, position, created_at,
                 feedback(vote_count)
             """)
             .eq("visible", value: true)
@@ -264,26 +265,36 @@ public final class VoiceBoxAPI {
         return items
     }
 
-    // MARK: - Image Upload
+    // MARK: - Settings
 
-    /// Maximum allowed image size in bytes (10MB)
-    private static let maxImageSizeBytes = 10 * 1024 * 1024
+    /// Fetch SDK settings from server
+    func fetchSettings() async throws -> Features {
+        let client = try client
+        let config = voicebox.configuration!
 
-    /// Upload image and return public URL
-    /// - Parameters:
-    ///   - data: Image data (JPEG, PNG, HEIC)
-    ///   - bucket: Storage bucket name
-    /// - Throws: `VoiceBoxError.imageTooLarge` if image exceeds 10MB
-    /// - Returns: Public URL of the uploaded image
-    func uploadImage(data: Data, bucket: String = "feedback-images") async throws -> String {
-        // Validate image size
-        let maxSize = Self.maxImageSizeBytes
-        if data.count > maxSize {
-            let actualMB = Double(data.count) / (1024 * 1024)
-            let maxMB = Double(maxSize) / (1024 * 1024)
-            throw VoiceBoxError.imageTooLarge(actualMB: actualMB, maxMB: maxMB)
+        struct ProjectSettings: Decodable {
+            let sdk_settings: Features
         }
 
+        let projects: [ProjectSettings] = try await client
+            .from("projects")
+            .select("sdk_settings")
+            .eq("api_key", value: config.apiKey)
+            .execute()
+            .value
+
+        guard let project = projects.first else {
+            print("[VoiceBox] Warning: No project found for API key, using default settings")
+            return .allEnabled
+        }
+
+        return project.sdk_settings
+    }
+
+    // MARK: - Image Upload
+
+    /// Upload image and return public URL
+    func uploadImage(data: Data, bucket: String = "feedback-images") async throws -> String {
         let client = try client
 
         let fileName = "\(UUID().uuidString).jpg"

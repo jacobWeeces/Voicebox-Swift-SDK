@@ -32,18 +32,11 @@ extension VoiceBox {
             .environment(\.voiceBoxLocalization, shared.configuration?.localization ?? Localization())
     }
 
-    /// View for submitting a new feature request
-    /// Use this in a sheet or navigation destination:
-    /// ```swift
-    /// .sheet(isPresented: $showNewRequest) {
-    ///     VoiceBox.NewRequestView()
-    /// }
-    /// ```
-    public static func NewRequestView() -> some View {
-        let viewModel = FeedbackViewModel()
-        return SubmitFeedbackView(viewModel: viewModel)
-            .voiceBoxTheme(shared.configuration?.theme ?? Theme())
-            .environment(\.voiceBoxLocalization, shared.configuration?.localization ?? Localization())
+    /// Present new request sheet directly
+    @MainActor
+    public static func presentNewRequest() {
+        // This would need to be connected to a presentation mechanism
+        // For now, provide the view
     }
 
     /// Announcement banner that manages its own state

@@ -53,6 +53,23 @@ public final class VoiceBox {
                 )
             )
         )
+
+        // Fetch feature settings from server in background
+        Task {
+            await shared.fetchServerSettings()
+        }
+    }
+
+    /// Fetch and apply feature settings from server
+    private func fetchServerSettings() async {
+        do {
+            let serverFeatures = try await api.fetchSettings()
+            configuration?.features = serverFeatures
+            print("[VoiceBox] Loaded settings from server")
+        } catch {
+            print("[VoiceBox] Failed to fetch settings, using defaults: \(error.localizedDescription)")
+            // Keep default allEnabled settings on error
+        }
     }
 
     // MARK: - Announcements
@@ -86,7 +103,6 @@ public enum VoiceBoxError: LocalizedError {
     case invalidResponse
     case networkError(Error)
     case serverError(String)
-    case imageTooLarge(actualMB: Double, maxMB: Double)
 
     public var errorDescription: String? {
         switch self {
@@ -98,8 +114,6 @@ public enum VoiceBoxError: LocalizedError {
             return "Network error: \(error.localizedDescription)"
         case .serverError(let message):
             return "Server error: \(message)"
-        case .imageTooLarge(let actualMB, let maxMB):
-            return "Image is too large (\(String(format: "%.1f", actualMB))MB). Maximum size is \(String(format: "%.0f", maxMB))MB."
         }
     }
 }
