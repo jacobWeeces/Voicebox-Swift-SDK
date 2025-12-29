@@ -87,6 +87,20 @@ public final class VoiceBox {
         await shared.announcementManager?.refresh()
     }
 
+    // MARK: - User
+
+    /// Update the user's email
+    /// - Parameter email: The user's email (or nil to clear)
+    public static func setUserEmail(_ email: String?) {
+        shared.configuration?.user.email = email
+    }
+
+    /// Update the user's name
+    /// - Parameter name: The user's display name (or nil to clear)
+    public static func setUserName(_ name: String?) {
+        shared.configuration?.user.name = name
+    }
+
     // MARK: - Internal
 
     func ensureConfigured() throws {

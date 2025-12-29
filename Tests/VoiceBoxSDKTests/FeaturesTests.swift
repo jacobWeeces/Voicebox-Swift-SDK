@@ -8,7 +8,6 @@ final class FeaturesTests: XCTestCase {
 
         // Tabs
         XCTAssertTrue(features.tabs.requests)
-        XCTAssertTrue(features.tabs.roadmap)
         XCTAssertTrue(features.tabs.changelog)
 
         // Submissions
@@ -16,6 +15,7 @@ final class FeaturesTests: XCTestCase {
         XCTAssertTrue(features.submissions.images)
         XCTAssertTrue(features.submissions.anonymous)
         XCTAssertFalse(features.submissions.requireEmail)
+        XCTAssertFalse(features.submissions.requireApproval)
 
         // Voting
         XCTAssertTrue(features.voting.enabled)
@@ -26,6 +26,8 @@ final class FeaturesTests: XCTestCase {
         XCTAssertTrue(features.comments.enabled)
         XCTAssertTrue(features.comments.images)
         XCTAssertTrue(features.comments.developerBadge)
+        XCTAssertTrue(features.comments.allowUserComments)
+        XCTAssertFalse(features.comments.requireApproval)
 
         // Display
         XCTAssertTrue(features.display.statusBadges)
@@ -41,28 +43,31 @@ final class FeaturesTests: XCTestCase {
 
     func testCustomInitialization() {
         let features = Features(
-            tabs: .init(requests: true, roadmap: false, changelog: false),
-            submissions: .init(enabled: true, images: false, anonymous: false, requireEmail: true),
+            tabs: .init(requests: true, changelog: false),
+            submissions: .init(enabled: true, images: false, anonymous: false, requireEmail: true, requireApproval: true),
             voting: .init(enabled: false, allowUnvote: false, showCounts: false),
-            comments: .init(enabled: false, images: false, developerBadge: false),
+            comments: .init(enabled: false, images: false, developerBadge: false, allowUserComments: false, requireApproval: true),
             display: .init(statusBadges: true, userAvatars: false, announcement: false, searchBar: true, timestamps: false),
             notifications: .init(optInPrompt: false, onStatusChange: false)
         )
 
         XCTAssertTrue(features.tabs.requests)
-        XCTAssertFalse(features.tabs.roadmap)
+        XCTAssertFalse(features.tabs.changelog)
         XCTAssertFalse(features.voting.enabled)
         XCTAssertTrue(features.submissions.requireEmail)
+        XCTAssertTrue(features.submissions.requireApproval)
+        XCTAssertFalse(features.comments.allowUserComments)
+        XCTAssertTrue(features.comments.requireApproval)
         XCTAssertFalse(features.display.userAvatars)
     }
 
     func testJSONDecoding() throws {
         let json = """
         {
-            "tabs": {"requests": true, "roadmap": false, "changelog": true},
-            "submissions": {"enabled": true, "images": false, "anonymous": true, "requireEmail": false},
+            "tabs": {"requests": true, "changelog": true},
+            "submissions": {"enabled": true, "images": false, "anonymous": true, "requireEmail": false, "requireApproval": true},
             "voting": {"enabled": true, "allowUnvote": false, "showCounts": true},
-            "comments": {"enabled": false, "images": false, "developerBadge": true},
+            "comments": {"enabled": false, "images": false, "developerBadge": true, "allowUserComments": false, "requireApproval": true},
             "display": {"statusBadges": true, "userAvatars": false, "announcement": true, "searchBar": false, "timestamps": true},
             "notifications": {"optInPrompt": false, "onStatusChange": true}
         }
@@ -71,12 +76,14 @@ final class FeaturesTests: XCTestCase {
         let features = try JSONDecoder().decode(Features.self, from: json)
 
         XCTAssertTrue(features.tabs.requests)
-        XCTAssertFalse(features.tabs.roadmap)
         XCTAssertTrue(features.tabs.changelog)
         XCTAssertFalse(features.submissions.images)
+        XCTAssertTrue(features.submissions.requireApproval)
         XCTAssertFalse(features.voting.allowUnvote)
         XCTAssertFalse(features.comments.enabled)
         XCTAssertTrue(features.comments.developerBadge)
+        XCTAssertFalse(features.comments.allowUserComments)
+        XCTAssertTrue(features.comments.requireApproval)
         XCTAssertFalse(features.display.userAvatars)
         XCTAssertFalse(features.display.searchBar)
         XCTAssertFalse(features.notifications.optInPrompt)
@@ -86,11 +93,11 @@ final class FeaturesTests: XCTestCase {
     func testMutability() {
         var features = Features.allEnabled
 
-        features.tabs.roadmap = false
+        features.tabs.changelog = false
         features.submissions.enabled = false
         features.voting.showCounts = false
 
-        XCTAssertFalse(features.tabs.roadmap)
+        XCTAssertFalse(features.tabs.changelog)
         XCTAssertFalse(features.submissions.enabled)
         XCTAssertFalse(features.voting.showCounts)
     }

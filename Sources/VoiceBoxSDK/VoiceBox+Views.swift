@@ -4,7 +4,7 @@ import SwiftUI
 
 extension VoiceBox {
 
-    /// Full tabbed feedback view with requests, roadmap, and changelog
+    /// Full tabbed feedback view with requests and changelog
     public static func FeedbackView() -> some View {
         VoiceBoxFeedbackView()
             .voiceBoxTheme(shared.configuration?.theme ?? Theme())
@@ -14,13 +14,6 @@ extension VoiceBox {
     /// Just the requests list view
     public static func RequestsView() -> some View {
         FeedbackListView()
-            .voiceBoxTheme(shared.configuration?.theme ?? Theme())
-            .environment(\.voiceBoxLocalization, shared.configuration?.localization ?? Localization())
-    }
-
-    /// Just the roadmap view
-    public static func RoadmapView() -> some View {
-        VoiceBoxRoadmapView()
             .voiceBoxTheme(shared.configuration?.theme ?? Theme())
             .environment(\.voiceBoxLocalization, shared.configuration?.localization ?? Localization())
     }

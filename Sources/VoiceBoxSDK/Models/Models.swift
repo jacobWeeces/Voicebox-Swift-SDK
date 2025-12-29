@@ -139,38 +139,3 @@ public struct ChangelogEntry: Codable, Identifiable, Sendable {
     }
 }
 
-// MARK: - Roadmap Item
-
-public struct RoadmapItem: Codable, Identifiable, Sendable {
-    public let id: UUID
-    public let projectId: UUID
-    public let feedbackId: UUID?
-    public let title: String
-    public var description: String?
-    public var stage: RoadmapColumn
-    public var position: Int
-    public let createdAt: Date
-
-    // Joined data
-    public var voteCount: Int?
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case projectId = "project_id"
-        case feedbackId = "feedback_id"
-        case title
-        case description
-        case stage
-        case position
-        case createdAt = "created_at"
-        case voteCount = "vote_count"
-    }
-}
-
-// MARK: - Roadmap Column
-
-public enum RoadmapColumn: String, Codable, CaseIterable, Sendable {
-    case planned
-    case inProgress = "in_progress"
-    case completed
-}

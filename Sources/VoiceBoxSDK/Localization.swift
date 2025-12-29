@@ -7,7 +7,6 @@ public struct Localization {
     // MARK: - Navigation
 
     public var requestsTab: String = "Requests"
-    public var roadmapTab: String = "Roadmap"
     public var changelogTab: String = "Changelog"
 
     // MARK: - Buttons
@@ -45,18 +44,10 @@ public struct Localization {
     public var statusCompleted: String = "Completed"
     public var statusDeclined: String = "Declined"
 
-    // MARK: - Roadmap Columns
-
-    public var roadmapPlanned: String = "Planned"
-    public var roadmapInProgress: String = "In Progress"
-    public var roadmapCompleted: String = "Completed"
-
     // MARK: - Empty States
 
     public var noRequestsTitle: String = "No requests yet"
     public var noRequestsMessage: String = "Be the first to suggest a feature!"
-    public var noRoadmapTitle: String = "Roadmap coming soon"
-    public var noRoadmapMessage: String = "Check back later for updates."
     public var noChangelogTitle: String = "No updates yet"
     public var noChangelogMessage: String = "We'll post updates here."
 

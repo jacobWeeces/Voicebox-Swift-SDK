@@ -20,11 +20,8 @@ final class VoiceBoxTests: XCTestCase {
         VoiceBox.configure(apiKey: "test_key") { config in
             config.user.email = "test@example.com"
             config.user.payment = .monthly(9.99)
-            // Customize features directly (server will override on fetch)
-            config.features.tabs.roadmap = false
         }
 
         XCTAssertEqual(VoiceBox.shared.configuration?.user.email, "test@example.com")
-        XCTAssertEqual(VoiceBox.shared.configuration?.features.tabs.roadmap, false)
     }
 }

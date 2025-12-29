@@ -21,14 +21,6 @@ public struct VoiceBoxFeedbackView: View {
                     }
             }
 
-            // Roadmap tab
-            if config?.features.tabs.roadmap == true {
-                VoiceBoxRoadmapView()
-                    .tabItem {
-                        Label(l10n.roadmapTab, systemImage: "map")
-                    }
-            }
-
             // Changelog tab
             if config?.features.tabs.changelog == true {
                 VoiceBoxChangelogView()

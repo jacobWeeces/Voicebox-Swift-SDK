@@ -244,27 +244,6 @@ public final class VoiceBoxAPI {
         return entries
     }
 
-    // MARK: - Roadmap
-
-    /// Fetch visible roadmap items
-    func fetchRoadmap() async throws -> [RoadmapItem] {
-        let client = try client
-
-        // Explicitly select public fields only - excludes developer_notes (private)
-        let items: [RoadmapItem] = try await client
-            .from("roadmap_items")
-            .select("""
-                id, project_id, feedback_id, title, description, stage, position, created_at,
-                feedback(vote_count)
-            """)
-            .eq("visible", value: true)
-            .order("position", ascending: true)
-            .execute()
-            .value
-
-        return items
-    }
-
     // MARK: - Settings
 
     /// Fetch SDK settings from server
