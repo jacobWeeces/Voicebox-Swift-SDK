@@ -85,6 +85,11 @@ struct FeedbackListView: View {
                             .padding(.horizontal)
                         }
                     }
+
+                    // Bottom padding to prevent FAB overlap with last items
+                    if config?.features.submissions.enabled == true {
+                        Spacer().frame(height: 76)
+                    }
                 }
                 .padding(.vertical)
             }
@@ -101,6 +106,8 @@ struct FeedbackListView: View {
                         .clipShape(Circle())
                         .shadow(color: theme.accentColor.opacity(0.3), radius: 8, x: 0, y: 4)
                 }
+                .accessibilityLabel(l10n.newRequestLabel)
+                .accessibilityHint("Opens the submit feedback form")
                 .padding(.trailing, 20)
                 .padding(.bottom, 20)
             }
