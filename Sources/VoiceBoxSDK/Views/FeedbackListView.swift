@@ -51,43 +51,60 @@ struct FeedbackListView: View {
     }
 
     private var contentView: some View {
-        ScrollView {
-            VStack(spacing: theme.spacing) {
-                // Announcement banner
-                if let announcement = viewModel.announcement,
-                   config?.features.display.announcement == true {
-                    AnnouncementBanner(announcement: announcement)
+        ZStack(alignment: .bottomTrailing) {
+            ScrollView {
+                VStack(spacing: theme.spacing) {
+                    // Announcement banner
+                    if let announcement = viewModel.announcement,
+                       config?.features.display.announcement == true {
+                        AnnouncementBanner(announcement: announcement)
+                            .padding(.horizontal)
+                    }
+
+                    // Search bar
+                    if config?.features.display.searchBar == true {
+                        searchBar
+                            .padding(.horizontal)
+                    }
+
+                    // Status filter
+                    statusFilter
                         .padding(.horizontal)
-                }
 
-                // Search bar
-                if config?.features.display.searchBar == true {
-                    searchBar
-                        .padding(.horizontal)
-                }
-
-                // Status filter
-                statusFilter
-                    .padding(.horizontal)
-
-                // Feedback list
-                LazyVStack(spacing: theme.spacing) {
-                    ForEach(viewModel.filteredFeedback) { feedback in
-                        FeedbackCard(feedback: feedback) {
-                            Task {
-                                await viewModel.toggleVote(for: feedback)
+                    // Feedback list
+                    LazyVStack(spacing: theme.spacing) {
+                        ForEach(viewModel.filteredFeedback) { feedback in
+                            FeedbackCard(feedback: feedback) {
+                                Task {
+                                    await viewModel.toggleVote(for: feedback)
+                                }
                             }
+                            .onTapGesture {
+                                selectedFeedback = feedback
+                            }
+                            .padding(.horizontal)
                         }
-                        .onTapGesture {
-                            selectedFeedback = feedback
-                        }
-                        .padding(.horizontal)
                     }
                 }
+                .padding(.vertical)
             }
-            .padding(.vertical)
+            .background(theme.backgroundColor)
+
+            // Floating action button for submitting new feedback
+            if config?.features.submissions.enabled == true {
+                Button(action: { showingSubmitSheet = true }) {
+                    Image(systemName: "plus")
+                        .font(.title2.bold())
+                        .foregroundColor(.white)
+                        .frame(width: 56, height: 56)
+                        .background(theme.accentColor)
+                        .clipShape(Circle())
+                        .shadow(color: theme.accentColor.opacity(0.3), radius: 8, x: 0, y: 4)
+                }
+                .padding(.trailing, 20)
+                .padding(.bottom, 20)
+            }
         }
-        .background(theme.backgroundColor)
     }
 
     private var searchBar: some View {
