@@ -119,6 +119,18 @@ public struct Announcement: Codable, Identifiable, Sendable {
     }
 }
 
+// MARK: - Announcement Section
+
+public struct AnnouncementSection: Codable, Sendable {
+    public let title: String
+    public let items: [String]
+
+    public init(title: String, items: [String]) {
+        self.title = title
+        self.items = items
+    }
+}
+
 // MARK: - Changelog Entry
 
 public struct ChangelogEntry: Codable, Identifiable, Sendable {
