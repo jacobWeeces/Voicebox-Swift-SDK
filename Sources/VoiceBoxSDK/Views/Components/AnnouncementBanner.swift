@@ -1,36 +1,42 @@
-// Sources/VoiceBox/Views/Components/AnnouncementBanner.swift
+// Sources/VoiceBoxSDK/Views/Components/AnnouncementBanner.swift
 import SwiftUI
 
-/// A banner displaying an announcement with expand/collapse and dismiss capabilities
+/// A slim inline banner displaying an announcement title with dismiss and tap-to-open capabilities.
 public struct AnnouncementBanner: View {
     let announcement: Announcement
     let config: AnnouncementBannerConfiguration
+    let onTap: () -> Void
     let onDismiss: (() -> Void)?
 
-    @State private var isExpanded: Bool = false
     @Environment(\.voiceBoxTheme) private var theme
-    @Environment(\.voiceBoxLocalization) private var l10n
 
     public init(
         announcement: Announcement,
         config: AnnouncementBannerConfiguration = AnnouncementBannerConfiguration(),
+        onTap: @escaping () -> Void,
         onDismiss: (() -> Void)? = nil
     ) {
         self.announcement = announcement
         self.config = config
+        self.onTap = onTap
         self.onDismiss = onDismiss
     }
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            // Header row
-            HStack {
-                Image(systemName: "megaphone.fill")
-                    .foregroundColor(theme.accentColor)
-
-                Text(config.headerLabel ?? l10n.announcementLabel)
+        VStack(alignment: .leading, spacing: 4) {
+            // Optional header label
+            if let headerLabel = config.headerLabel {
+                Text(headerLabel)
                     .font(.caption.bold())
-                    .foregroundColor(theme.accentColor)
+                    .foregroundColor(theme.secondaryTextColor)
+            }
+
+            // Title row with dismiss button
+            HStack {
+                Text(announcement.title)
+                    .font(config.titleFont ?? theme.titleFont)
+                    .foregroundColor(config.titleColor ?? theme.primaryTextColor)
+                    .lineLimit(1)
 
                 Spacer()
 
@@ -44,43 +50,13 @@ public struct AnnouncementBanner: View {
                     }
                 }
             }
-
-            // Title
-            Text(announcement.title)
-                .font(theme.titleFont)
-                .foregroundColor(theme.primaryTextColor)
-
-            // Body
-            if isExpanded {
-                Text(announcement.body)
-                    .font(theme.bodyFont)
-                    .foregroundColor(theme.secondaryTextColor)
-
-                if config.isTappable {
-                    HStack {
-                        Spacer()
-                        Text("Tap to collapse")
-                            .font(.caption)
-                            .foregroundColor(theme.secondaryTextColor.opacity(0.7))
-                    }
-                }
-            } else {
-                Text(announcement.body)
-                    .font(theme.bodyFont)
-                    .foregroundColor(theme.secondaryTextColor)
-                    .lineLimit(config.collapsedBodyLines)
-            }
         }
         .padding(theme.padding)
-        .background(theme.accentColor.opacity(0.1))
+        .background(config.backgroundColor)
         .cornerRadius(theme.cardStyle.cornerRadius)
         .contentShape(Rectangle())
         .onTapGesture {
-            if config.isTappable {
-                withAnimation(.spring(duration: config.animationDuration)) {
-                    isExpanded.toggle()
-                }
-            }
+            onTap()
         }
     }
 }

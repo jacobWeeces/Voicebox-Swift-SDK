@@ -5,7 +5,6 @@ struct FeedbackListView: View {
     @StateObject private var viewModel = FeedbackViewModel()
     @State private var showingSubmitSheet = false
     @State private var selectedFeedback: Feedback?
-    @State private var showingAnnouncementDetail = false
 
     @Environment(\.voiceBoxTheme) private var theme
     @Environment(\.voiceBoxLocalization) private var l10n
@@ -42,25 +41,6 @@ struct FeedbackListView: View {
             .sheet(item: $selectedFeedback) { feedback in
                 FeedbackDetailView(feedback: feedback, viewModel: viewModel)
             }
-            #if os(iOS)
-            .fullScreenCover(isPresented: $showingAnnouncementDetail) {
-                if let announcement = viewModel.announcement {
-                    AnnouncementDetailView(
-                        announcement: announcement,
-                        onClose: { showingAnnouncementDetail = false }
-                    )
-                }
-            }
-            #else
-            .sheet(isPresented: $showingAnnouncementDetail) {
-                if let announcement = viewModel.announcement {
-                    AnnouncementDetailView(
-                        announcement: announcement,
-                        onClose: { showingAnnouncementDetail = false }
-                    )
-                }
-            }
-            #endif
             .task {
                 await viewModel.loadFeedback()
             }
@@ -71,70 +51,43 @@ struct FeedbackListView: View {
     }
 
     private var contentView: some View {
-        ZStack(alignment: .bottomTrailing) {
-            ScrollView {
-                VStack(spacing: theme.spacing) {
-                    // Announcement banner
-                    if let announcement = viewModel.announcement,
-                       config?.features.display.announcement == true {
-                        AnnouncementBanner(
-                            announcement: announcement,
-                            onTap: { showingAnnouncementDetail = true }
-                        )
+        ScrollView {
+            VStack(spacing: theme.spacing) {
+                // Announcement banner
+                if let announcement = viewModel.announcement,
+                   config?.features.display.announcement == true {
+                    AnnouncementBanner(announcement: announcement)
                         .padding(.horizontal)
-                    }
+                }
 
-                    // Search bar
-                    if config?.features.display.searchBar == true {
-                        searchBar
-                            .padding(.horizontal)
-                    }
-
-                    // Status filter
-                    statusFilter
+                // Search bar
+                if config?.features.display.searchBar == true {
+                    searchBar
                         .padding(.horizontal)
+                }
 
-                    // Feedback list
-                    LazyVStack(spacing: theme.spacing) {
-                        ForEach(viewModel.filteredFeedback) { feedback in
-                            FeedbackCard(feedback: feedback) {
-                                Task {
-                                    await viewModel.toggleVote(for: feedback)
-                                }
+                // Status filter
+                statusFilter
+                    .padding(.horizontal)
+
+                // Feedback list
+                LazyVStack(spacing: theme.spacing) {
+                    ForEach(viewModel.filteredFeedback) { feedback in
+                        FeedbackCard(feedback: feedback) {
+                            Task {
+                                await viewModel.toggleVote(for: feedback)
                             }
-                            .onTapGesture {
-                                selectedFeedback = feedback
-                            }
-                            .padding(.horizontal)
                         }
-                    }
-
-                    // Bottom padding to prevent FAB overlap with last items
-                    if config?.features.submissions.enabled == true {
-                        Spacer().frame(height: 76)
+                        .onTapGesture {
+                            selectedFeedback = feedback
+                        }
+                        .padding(.horizontal)
                     }
                 }
-                .padding(.vertical)
             }
-            .background(theme.backgroundColor)
-
-            // Floating action button for submitting new feedback
-            if config?.features.submissions.enabled == true {
-                Button(action: { showingSubmitSheet = true }) {
-                    Image(systemName: "plus")
-                        .font(.title2.bold())
-                        .foregroundColor(.white)
-                        .frame(width: 56, height: 56)
-                        .background(theme.accentColor)
-                        .clipShape(Circle())
-                        .shadow(color: theme.accentColor.opacity(0.3), radius: 8, x: 0, y: 4)
-                }
-                .accessibilityLabel(l10n.newRequestLabel)
-                .accessibilityHint("Opens the submit feedback form")
-                .padding(.trailing, 20)
-                .padding(.bottom, 20)
-            }
+            .padding(.vertical)
         }
+        .background(theme.backgroundColor)
     }
 
     private var searchBar: some View {

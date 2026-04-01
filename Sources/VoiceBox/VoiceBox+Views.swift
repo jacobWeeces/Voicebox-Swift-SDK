@@ -4,7 +4,7 @@ import SwiftUI
 
 extension VoiceBox {
 
-    /// Full tabbed feedback view with requests and changelog
+    /// Full tabbed feedback view with requests, roadmap, and changelog
     public static func FeedbackView() -> some View {
         VoiceBoxFeedbackView()
             .voiceBoxTheme(shared.configuration?.theme ?? Theme())
@@ -14,6 +14,13 @@ extension VoiceBox {
     /// Just the requests list view
     public static func RequestsView() -> some View {
         FeedbackListView()
+            .voiceBoxTheme(shared.configuration?.theme ?? Theme())
+            .environment(\.voiceBoxLocalization, shared.configuration?.localization ?? Localization())
+    }
+
+    /// Just the roadmap view
+    public static func RoadmapView() -> some View {
+        VoiceBoxRoadmapView()
             .voiceBoxTheme(shared.configuration?.theme ?? Theme())
             .environment(\.voiceBoxLocalization, shared.configuration?.localization ?? Localization())
     }
@@ -32,8 +39,7 @@ extension VoiceBox {
         // For now, provide the view
     }
 
-    /// Announcement banner that manages its own state.
-    /// Tapping the banner opens a full-screen detail modal.
+    /// Announcement banner that manages its own state
     /// - Parameter configure: Optional closure to customize banner configuration
     /// - Returns: A view that displays announcements when available
     public static func AnnouncementBanner(
@@ -74,8 +80,6 @@ private struct AnnouncementBannerWrapper: View {
     @Environment(\.voiceBoxTheme) private var theme
     @Environment(\.voiceBoxLocalization) private var l10n
 
-    @State private var isModalPresented = false
-
     var body: some View {
         Group {
             if let announcement = manager.currentAnnouncement,
@@ -83,41 +87,16 @@ private struct AnnouncementBannerWrapper: View {
                !manager.isDismissed {
                 AnnouncementBanner(
                     announcement: announcement,
-                    config: config,
-                    onTap: { isModalPresented = true },
-                    onDismiss: {
-                        withAnimation(.easeOut(duration: 0.25)) {
-                            manager.dismiss(config: config)
-                        }
+                    config: config
+                ) {
+                    withAnimation(.easeOut(duration: 0.25)) {
+                        manager.dismiss(config: config)
                     }
-                )
+                }
                 .voiceBoxTheme(theme)
                 .environment(\.voiceBoxLocalization, l10n)
             }
         }
-        #if os(iOS)
-        .fullScreenCover(isPresented: $isModalPresented) {
-            if let announcement = manager.currentAnnouncement {
-                AnnouncementDetailView(
-                    announcement: announcement,
-                    onClose: { isModalPresented = false }
-                )
-                .voiceBoxTheme(theme)
-                .environment(\.voiceBoxLocalization, l10n)
-            }
-        }
-        #else
-        .sheet(isPresented: $isModalPresented) {
-            if let announcement = manager.currentAnnouncement {
-                AnnouncementDetailView(
-                    announcement: announcement,
-                    onClose: { isModalPresented = false }
-                )
-                .voiceBoxTheme(theme)
-                .environment(\.voiceBoxLocalization, l10n)
-            }
-        }
-        #endif
         .task {
             await manager.refresh()
         }

@@ -5,7 +5,6 @@ import SwiftUI
 ///
 /// This class handles the lifecycle of announcements, including:
 /// - Fetching the current active announcement from the API
-/// - Managing expand/collapse state
 /// - Persisting dismiss state according to configuration
 /// - Determining when announcements should be shown
 @MainActor
@@ -15,9 +14,6 @@ public final class AnnouncementManager: ObservableObject {
 
     /// The current active announcement from the server, if any.
     @Published public var currentAnnouncement: Announcement?
-
-    /// Whether the announcement banner is currently expanded to show full body.
-    @Published public var isExpanded: Bool = false
 
     /// Whether the user has dismissed the current announcement.
     @Published public var isDismissed: Bool = false
