@@ -44,6 +44,11 @@ struct AnnouncementDetailView: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.horizontal, 24)
                         .padding(.top, 8)
+                        .padding(.bottom, 16)
+
+                    // Divider between title and sections
+                    Divider()
+                        .padding(.horizontal, 24)
                         .padding(.bottom, 24)
 
                     // Sections
@@ -104,10 +109,9 @@ struct AnnouncementDetailView: View {
                                 )
                             }
                             .opacity(appeared ? 1 : 0)
-                            .offset(y: appeared ? 0 : 20)
                             .animation(
-                                .spring(response: 0.5, dampingFraction: 0.8)
-                                    .delay(Double(sectionIndex) * 0.1),
+                                .easeOut(duration: 0.3)
+                                    .delay(Double(sectionIndex) * 0.08),
                                 value: appeared
                             )
                         }
