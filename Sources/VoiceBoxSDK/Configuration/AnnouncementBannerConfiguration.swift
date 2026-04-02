@@ -49,8 +49,8 @@ public struct AnnouncementBannerConfiguration {
     /// Custom label for the banner header. `nil` hides the header. Default is `nil`.
     public var headerLabel: String?
 
-    /// Background color of the banner card. Default is `.white`.
-    public var backgroundColor: Color
+    /// Background color of the banner card. `nil` uses a subtle accent tint. Default is `nil`.
+    public var backgroundColor: Color?
 
     /// Override font for the banner title. `nil` uses theme default. Default is `nil`.
     public var titleFont: Font?
@@ -63,7 +63,7 @@ public struct AnnouncementBannerConfiguration {
         isDismissible: Bool = true,
         position: Position = .top,
         headerLabel: String? = nil,
-        backgroundColor: Color = .white,
+        backgroundColor: Color? = nil,
         titleFont: Font? = nil,
         titleColor: Color? = nil
     ) {

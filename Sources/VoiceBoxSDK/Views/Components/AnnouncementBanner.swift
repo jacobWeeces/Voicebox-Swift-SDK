@@ -31,8 +31,12 @@ public struct AnnouncementBanner: View {
                     .foregroundColor(theme.secondaryTextColor)
             }
 
-            // Title row with chevron and dismiss button
-            HStack(spacing: 8) {
+            // Title row with icon, chevron, and dismiss button
+            HStack(spacing: 10) {
+                Image(systemName: "megaphone.fill")
+                    .font(.body)
+                    .foregroundColor(theme.accentColor)
+
                 Text(announcement.title)
                     .font(config.titleFont ?? theme.titleFont)
                     .foregroundColor(config.titleColor ?? theme.primaryTextColor)
@@ -42,7 +46,7 @@ public struct AnnouncementBanner: View {
 
                 Image(systemName: "chevron.right")
                     .font(.caption.weight(.semibold))
-                    .foregroundColor(theme.secondaryTextColor)
+                    .foregroundColor(theme.accentColor)
 
                 if config.isDismissible {
                     Button {
@@ -56,7 +60,7 @@ public struct AnnouncementBanner: View {
             }
         }
         .padding(theme.padding)
-        .background(config.backgroundColor)
+        .background(config.backgroundColor ?? theme.accentColor.opacity(0.1))
         .cornerRadius(theme.cardStyle.cornerRadius)
         .contentShape(Rectangle())
         .onTapGesture {
