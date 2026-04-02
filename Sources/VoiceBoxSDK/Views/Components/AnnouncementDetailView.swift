@@ -36,37 +36,24 @@ struct AnnouncementDetailView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // Header
-            VStack(alignment: .leading, spacing: 16) {
-                // Close button
-                HStack {
-                    Button(action: onClose) {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.title2)
-                            .foregroundStyle(.secondary)
-                    }
-
-                    Spacer()
-                }
-
-                // Badge
-                Text(l10n.announcementLabel)
-                    .font(.caption.weight(.semibold))
-                    .foregroundColor(theme.accentColor)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 4)
-                    .background(
-                        Capsule()
-                            .fill(theme.accentColor.opacity(colorScheme == .dark ? 0.2 : 0.12))
-                    )
-
+            HStack(alignment: .top) {
                 // Title
                 Text(announcement.title)
                     .font(.largeTitle.bold())
                     .foregroundColor(theme.primaryTextColor)
                     .fixedSize(horizontal: false, vertical: true)
+
+                Spacer()
+
+                // Close button — top right
+                Button(action: onClose) {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.title2)
+                        .foregroundStyle(.tertiary)
+                }
             }
             .padding(.horizontal, 24)
-            .padding(.top, 16)
+            .padding(.top, 20)
             .padding(.bottom, 20)
             .background(contentBackground)
 
