@@ -48,8 +48,12 @@ struct AnnouncementDetailView: View {
                 // Close button — top right
                 Button(action: onClose) {
                     Image(systemName: "xmark.circle.fill")
-                        .font(.title2)
-                        .foregroundStyle(.tertiary)
+                        .font(.system(size: 28))
+                        .symbolRenderingMode(.palette)
+                        .foregroundStyle(
+                            Color(white: colorScheme == .dark ? 0.9 : 0.4),
+                            Color(white: colorScheme == .dark ? 0.3 : 0.88)
+                        )
                 }
             }
             .padding(.horizontal, 24)
