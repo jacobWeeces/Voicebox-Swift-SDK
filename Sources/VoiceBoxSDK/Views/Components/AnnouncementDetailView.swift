@@ -11,6 +11,8 @@ struct AnnouncementDetailView: View {
     @Environment(\.voiceBoxLocalization) private var l10n
     @Environment(\.colorScheme) private var colorScheme
 
+    @State private var appeared = false
+
     private var sections: [AnnouncementSection] {
         guard let data = announcement.body.data(using: .utf8),
               let parsed = try? JSONDecoder().decode([AnnouncementSection].self, from: data) else {
@@ -33,91 +35,106 @@ struct AnnouncementDetailView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Header with accent gradient wash
-            ZStack(alignment: .topLeading) {
-                // Gradient background
-                LinearGradient(
-                    colors: [
-                        theme.accentColor.opacity(colorScheme == .dark ? 0.15 : 0.08),
-                        theme.accentColor.opacity(0.02),
-                        contentBackground
-                    ],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .frame(height: 200)
-
-                VStack(alignment: .leading, spacing: 16) {
-                    // Close button
-                    HStack {
-                        Button(action: onClose) {
-                            Image(systemName: "xmark.circle.fill")
-                                .font(.title2)
-                                .foregroundStyle(.secondary)
-                        }
-
-                        Spacer()
+            // Header
+            VStack(alignment: .leading, spacing: 16) {
+                // Close button
+                HStack {
+                    Button(action: onClose) {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.title2)
+                            .foregroundStyle(.secondary)
                     }
 
-                    // Badge
-                    Text(l10n.announcementLabel)
-                        .font(.caption.weight(.semibold))
-                        .foregroundColor(theme.accentColor)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 4)
-                        .background(
-                            Capsule()
-                                .fill(theme.accentColor.opacity(colorScheme == .dark ? 0.2 : 0.12))
-                        )
-
-                    // Title
-                    Text(announcement.title)
-                        .font(.largeTitle.bold())
-                        .foregroundColor(theme.primaryTextColor)
-                        .fixedSize(horizontal: false, vertical: true)
+                    Spacer()
                 }
-                .padding(.horizontal, 24)
-                .padding(.top, 16)
+
+                // Badge
+                Text(l10n.announcementLabel)
+                    .font(.caption.weight(.semibold))
+                    .foregroundColor(theme.accentColor)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .background(
+                        Capsule()
+                            .fill(theme.accentColor.opacity(colorScheme == .dark ? 0.2 : 0.12))
+                    )
+
+                // Title
+                Text(announcement.title)
+                    .font(.largeTitle.bold())
+                    .foregroundColor(theme.primaryTextColor)
+                    .fixedSize(horizontal: false, vertical: true)
             }
+            .padding(.horizontal, 24)
+            .padding(.top, 16)
+            .padding(.bottom, 20)
+            .background(contentBackground)
 
             // Scrollable sections
             ScrollView {
-                VStack(spacing: 24) {
-                    ForEach(Array(sections.enumerated()), id: \.offset) { _, section in
+                VStack(spacing: 28) {
+                    ForEach(Array(sections.enumerated()), id: \.offset) { sectionIndex, section in
                         VStack(alignment: .leading, spacing: 10) {
-                            // Section header
-                            Text(section.title)
-                                .font(.title3.bold())
-                                .foregroundColor(theme.primaryTextColor)
-                                .padding(.leading, 4)
+                            // Section header with accent underline
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text(section.title)
+                                    .font(.title3.bold())
+                                    .foregroundColor(theme.primaryTextColor)
+                                    .padding(.leading, 4)
 
-                            // Items card
-                            VStack(alignment: .leading, spacing: 0) {
-                                ForEach(Array(section.items.enumerated()), id: \.offset) { idx, item in
-                                    HStack(alignment: .top, spacing: 14) {
-                                        Circle()
-                                            .fill(theme.accentColor)
-                                            .frame(width: 6, height: 6)
-                                            .padding(.top, 7)
+                                RoundedRectangle(cornerRadius: 1.5)
+                                    .fill(theme.accentColor)
+                                    .frame(width: 32, height: 3)
+                                    .padding(.leading, 4)
+                            }
 
-                                        Text(item)
-                                            .font(.body)
-                                            .foregroundColor(theme.primaryTextColor)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                    }
-                                    .padding(.vertical, 14)
-                                    .padding(.horizontal, 18)
+                            // Items card with accent left border
+                            HStack(spacing: 0) {
+                                // Accent left edge
+                                RoundedRectangle(cornerRadius: 2)
+                                    .fill(theme.accentColor)
+                                    .frame(width: 3)
 
-                                    if idx < section.items.count - 1 {
-                                        Divider()
-                                            .padding(.leading, 38)
+                                // Card content
+                                VStack(alignment: .leading, spacing: 0) {
+                                    ForEach(Array(section.items.enumerated()), id: \.offset) { idx, item in
+                                        HStack(alignment: .top, spacing: 14) {
+                                            Circle()
+                                                .fill(theme.accentColor)
+                                                .frame(width: 8, height: 8)
+                                                .padding(.top, 7)
+
+                                            Text(item)
+                                                .font(.body.weight(.medium))
+                                                .foregroundColor(theme.primaryTextColor)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                        }
+                                        .padding(.vertical, 16)
+                                        .padding(.horizontal, 18)
+
+                                        if idx < section.items.count - 1 {
+                                            Divider()
+                                                .padding(.leading, 40)
+                                        }
                                     }
                                 }
+                                .frame(maxWidth: .infinity)
                             }
                             .background(cardBackground)
                             .clipShape(RoundedRectangle(cornerRadius: 14))
-                            .shadow(color: .black.opacity(colorScheme == .dark ? 0 : 0.06), radius: 4, y: 2)
+                            .shadow(
+                                color: .black.opacity(colorScheme == .dark ? 0.3 : 0.1),
+                                radius: 8,
+                                y: 4
+                            )
                         }
+                        .opacity(appeared ? 1 : 0)
+                        .offset(y: appeared ? 0 : 20)
+                        .animation(
+                            .spring(response: 0.5, dampingFraction: 0.8)
+                                .delay(Double(sectionIndex) * 0.1),
+                            value: appeared
+                        )
                     }
                 }
                 .padding(.horizontal, 24)
@@ -125,6 +142,9 @@ struct AnnouncementDetailView: View {
                 .padding(.bottom, 40)
             }
             .background(contentBackground)
+        }
+        .onAppear {
+            appeared = true
         }
     }
 }
