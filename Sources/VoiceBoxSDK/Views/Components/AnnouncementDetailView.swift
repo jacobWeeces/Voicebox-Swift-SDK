@@ -44,7 +44,7 @@ struct AnnouncementDetailView: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.horizontal, 24)
                         .padding(.top, 8)
-                        .padding(.bottom, 20)
+                        .padding(.bottom, 24)
 
                     // Sections
                     VStack(spacing: 28) {
@@ -65,10 +65,12 @@ struct AnnouncementDetailView: View {
 
                                 // Items card with accent left border
                                 HStack(spacing: 0) {
+                                    // Accent left edge
                                     RoundedRectangle(cornerRadius: 2)
                                         .fill(theme.accentColor)
                                         .frame(width: 3)
 
+                                    // Card content
                                     VStack(alignment: .leading, spacing: 0) {
                                         ForEach(Array(section.items.enumerated()), id: \.offset) { idx, item in
                                             HStack(alignment: .top, spacing: 14) {
@@ -116,14 +118,17 @@ struct AnnouncementDetailView: View {
             }
             .background(contentBackground)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button(action: onClose) {
-                        Image(systemName: "xmark.circle.fill")
-                            .symbolRenderingMode(.hierarchical)
-                            .foregroundStyle(.secondary)
-                            .font(.title3)
-                    }
+                #if os(iOS)
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Done", action: onClose)
+                        .fontWeight(.semibold)
                 }
+                #else
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done", action: onClose)
+                        .fontWeight(.semibold)
+                }
+                #endif
             }
         }
         .onAppear {
