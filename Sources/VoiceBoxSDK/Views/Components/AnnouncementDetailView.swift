@@ -110,7 +110,7 @@ struct AnnouncementDetailView: View {
                             }
                             .opacity(appeared ? 1 : 0)
                             .animation(
-                                .easeOut(duration: 0.3)
+                                .easeOut(duration: 0.35)
                                     .delay(Double(sectionIndex) * 0.08),
                                 value: appeared
                             )

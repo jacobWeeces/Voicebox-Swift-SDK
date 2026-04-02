@@ -22,57 +22,42 @@ public struct AnnouncementBanner: View {
         self.onDismiss = onDismiss
     }
 
-    @Environment(\.colorScheme) private var colorScheme
-
     public var body: some View {
-        HStack(spacing: 0) {
-            // Accent left edge
-            RoundedRectangle(cornerRadius: 2)
-                .fill(theme.accentColor)
-                .frame(width: 3)
+        VStack(alignment: .leading, spacing: 4) {
+            // Optional header label
+            if let headerLabel = config.headerLabel {
+                Text(headerLabel)
+                    .font(.caption.bold())
+                    .foregroundColor(theme.secondaryTextColor)
+            }
 
-            VStack(alignment: .leading, spacing: 4) {
-                // Optional header label
-                if let headerLabel = config.headerLabel {
-                    Text(headerLabel)
-                        .font(.caption.bold())
-                        .foregroundColor(theme.secondaryTextColor)
-                }
+            // Title row with chevron and dismiss button
+            HStack(spacing: 8) {
+                Text(announcement.title)
+                    .font(config.titleFont ?? theme.titleFont)
+                    .foregroundColor(config.titleColor ?? theme.primaryTextColor)
+                    .lineLimit(1)
 
-                // Title row with chevron and dismiss button
-                HStack(spacing: 12) {
-                    Text(announcement.title)
-                        .font(config.titleFont ?? theme.titleFont)
-                        .foregroundColor(config.titleColor ?? theme.primaryTextColor)
-                        .lineLimit(1)
+                Spacer()
 
-                    Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundColor(theme.secondaryTextColor)
 
-                    // Tap indicator
-                    Image(systemName: "chevron.right")
-                        .font(.caption.weight(.semibold))
-                        .foregroundColor(theme.accentColor)
-
-                    if config.isDismissible {
-                        Button {
-                            onDismiss?()
-                        } label: {
-                            Image(systemName: "xmark")
-                                .font(.caption.bold())
-                                .foregroundColor(theme.secondaryTextColor)
-                        }
+                if config.isDismissible {
+                    Button {
+                        onDismiss?()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.caption.bold())
+                            .foregroundColor(theme.secondaryTextColor)
                     }
                 }
             }
-            .padding(theme.padding)
         }
+        .padding(theme.padding)
         .background(config.backgroundColor)
-        .clipShape(RoundedRectangle(cornerRadius: theme.cardStyle.cornerRadius))
-        .shadow(
-            color: .black.opacity(colorScheme == .dark ? 0.3 : 0.08),
-            radius: 6,
-            y: 3
-        )
+        .cornerRadius(theme.cardStyle.cornerRadius)
         .contentShape(Rectangle())
         .onTapGesture {
             onTap()
