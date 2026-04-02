@@ -11,8 +11,6 @@ struct AnnouncementDetailView: View {
     @Environment(\.voiceBoxLocalization) private var l10n
     @Environment(\.colorScheme) private var colorScheme
 
-    @State private var appeared = false
-
     private var sections: [AnnouncementSection] {
         guard let data = announcement.body.data(using: .utf8),
               let parsed = try? JSONDecoder().decode([AnnouncementSection].self, from: data) else {
@@ -108,12 +106,6 @@ struct AnnouncementDetailView: View {
                                     y: 4
                                 )
                             }
-                            .opacity(appeared ? 1 : 0)
-                            .animation(
-                                .easeOut(duration: 0.35)
-                                    .delay(Double(sectionIndex) * 0.08),
-                                value: appeared
-                            )
                         }
                     }
                     .padding(.horizontal, 24)
@@ -134,9 +126,6 @@ struct AnnouncementDetailView: View {
                 }
                 #endif
             }
-        }
-        .onAppear {
-            appeared = true
         }
     }
 }
