@@ -211,14 +211,17 @@ public final class VoiceBoxAPI {
 
     // MARK: - Announcement
 
-    /// Fetch active announcement
+    /// Fetch active announcement. Filters out announcements still scheduled for the future so
+    /// scheduled activations honor `scheduled_for` even without a server-side cron.
     func fetchAnnouncement() async throws -> Announcement? {
         let client = try client
+        let now = ISO8601DateFormatter().string(from: Date())
 
         let announcements: [Announcement] = try await client
             .from("announcements")
             .select()
             .eq("active", value: true)
+            .or("scheduled_for.is.null,scheduled_for.lte.\(now)")
             .limit(1)
             .execute()
             .value
@@ -228,14 +231,17 @@ public final class VoiceBoxAPI {
 
     // MARK: - Changelog
 
-    /// Fetch published changelog entries
+    /// Fetch published changelog entries. Filters out entries whose `published_at` is still in
+    /// the future so scheduled releases don't leak early.
     func fetchChangelog(limit: Int = 20) async throws -> [ChangelogEntry] {
         let client = try client
+        let now = ISO8601DateFormatter().string(from: Date())
 
         let entries: [ChangelogEntry] = try await client
             .from("changelog")
             .select()
             .eq("published", value: true)
+            .lte("published_at", value: now)
             .order("published_at", ascending: false)
             .limit(limit)
             .execute()
