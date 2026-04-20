@@ -66,10 +66,15 @@ public struct Localization {
     // MARK: - Time
 
     public var justNow: String = "Just now"
+    public var minuteAgo: String = "%d minute ago"
     public var minutesAgo: String = "%d minutes ago"
+    public var hourAgo: String = "%d hour ago"
     public var hoursAgo: String = "%d hours ago"
+    public var dayAgo: String = "%d day ago"
     public var daysAgo: String = "%d days ago"
+    public var weekAgo: String = "%d week ago"
     public var weeksAgo: String = "%d weeks ago"
+    public var monthAgo: String = "%d month ago"
     public var monthsAgo: String = "%d months ago"
 
     // MARK: - Developer Badge
@@ -108,19 +113,19 @@ public struct Localization {
             return justNow
         } else if seconds < 3600 {
             let minutes = seconds / 60
-            return String(format: minutesAgo, minutes)
+            return String(format: minutes == 1 ? minuteAgo : minutesAgo, minutes)
         } else if seconds < 86400 {
             let hours = seconds / 3600
-            return String(format: hoursAgo, hours)
+            return String(format: hours == 1 ? hourAgo : hoursAgo, hours)
         } else if seconds < 604800 {
             let days = seconds / 86400
-            return String(format: daysAgo, days)
+            return String(format: days == 1 ? dayAgo : daysAgo, days)
         } else if seconds < 2592000 {
             let weeks = seconds / 604800
-            return String(format: weeksAgo, weeks)
+            return String(format: weeks == 1 ? weekAgo : weeksAgo, weeks)
         } else {
             let months = seconds / 2592000
-            return String(format: monthsAgo, months)
+            return String(format: months == 1 ? monthAgo : monthsAgo, months)
         }
     }
 }
