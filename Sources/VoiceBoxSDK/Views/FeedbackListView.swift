@@ -9,6 +9,7 @@ struct FeedbackListView: View {
 
     @Environment(\.voiceBoxTheme) private var theme
     @Environment(\.voiceBoxLocalization) private var l10n
+    @Environment(\.dismiss) private var dismiss
 
     private var config: Configuration? {
         VoiceBox.shared.configuration
@@ -27,13 +28,12 @@ struct FeedbackListView: View {
             }
             .navigationTitle(l10n.requestsTab)
             .toolbar {
-                if config?.features.submissions.enabled == true {
-                    ToolbarItem(placement: .primaryAction) {
-                        Button(action: { showingSubmitSheet = true }) {
-                            Image(systemName: "plus.circle.fill")
-                                .foregroundColor(theme.accentColor)
-                        }
+                ToolbarItem(placement: .primaryAction) {
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "xmark")
+                            .foregroundColor(theme.accentColor)
                     }
+                    .accessibilityLabel("Close")
                 }
             }
             .sheet(isPresented: $showingSubmitSheet) {
