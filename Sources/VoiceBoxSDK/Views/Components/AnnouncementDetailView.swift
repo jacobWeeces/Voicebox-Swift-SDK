@@ -37,7 +37,7 @@ struct AnnouncementDetailView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     // Title
                     Text(announcement.title)
-                        .font(.largeTitle.bold())
+                        .font(theme.largeTitleFont)
                         .foregroundColor(theme.primaryTextColor)
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.horizontal, 24)
@@ -56,7 +56,7 @@ struct AnnouncementDetailView: View {
                                 // Section header with accent underline
                                 VStack(alignment: .leading, spacing: 6) {
                                     Text(section.title)
-                                        .font(.title3.bold())
+                                        .font(theme.title3BoldFont)
                                         .foregroundColor(theme.primaryTextColor)
                                         .padding(.leading, 4)
 
@@ -83,7 +83,7 @@ struct AnnouncementDetailView: View {
                                                     .padding(.top, 7)
 
                                                 Text(item)
-                                                    .font(.body.weight(.medium))
+                                                    .font(theme.bodyEmphasizedFont)
                                                     .foregroundColor(theme.primaryTextColor)
                                                     .frame(maxWidth: .infinity, alignment: .leading)
                                             }

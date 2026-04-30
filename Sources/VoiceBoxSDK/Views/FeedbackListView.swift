@@ -27,7 +27,15 @@ struct FeedbackListView: View {
                 }
             }
             .navigationTitle(l10n.requestsTab)
+            #if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(l10n.requestsTab)
+                        .font(theme.titleFont)
+                        .foregroundColor(theme.primaryTextColor)
+                }
                 ToolbarItem(placement: .primaryAction) {
                     Button(action: { dismiss() }) {
                         Image(systemName: "xmark")
@@ -40,7 +48,7 @@ struct FeedbackListView: View {
                 SubmitFeedbackView(viewModel: viewModel)
             }
             .sheet(item: $selectedFeedback) { feedback in
-                FeedbackDetailView(feedback: feedback, viewModel: viewModel)
+                FeedbackDetailView(initialFeedback: feedback, viewModel: viewModel)
             }
             #if os(iOS)
             .fullScreenCover(isPresented: $showingAnnouncementDetail) {
@@ -97,14 +105,17 @@ struct FeedbackListView: View {
                     // Feedback list
                     LazyVStack(spacing: theme.spacing) {
                         ForEach(viewModel.filteredFeedback) { feedback in
-                            FeedbackCard(feedback: feedback) {
-                                Task {
-                                    await viewModel.toggleVote(for: feedback)
+                            FeedbackCard(
+                                feedback: feedback,
+                                onVote: {
+                                    Task {
+                                        await viewModel.toggleVote(for: feedback)
+                                    }
+                                },
+                                onTap: {
+                                    selectedFeedback = feedback
                                 }
-                            }
-                            .onTapGesture {
-                                selectedFeedback = feedback
-                            }
+                            )
                             .padding(.horizontal)
                         }
                     }
@@ -122,7 +133,7 @@ struct FeedbackListView: View {
             if config?.features.submissions.enabled == true {
                 Button(action: { showingSubmitSheet = true }) {
                     Image(systemName: "plus")
-                        .font(.title2.bold())
+                        .font(theme.title2BoldFont)
                         .foregroundColor(.white)
                         .frame(width: 56, height: 56)
                         .background(theme.accentColor)
@@ -167,7 +178,7 @@ struct FeedbackListView: View {
             viewModel.selectedStatus = status
         }) {
             Text(title)
-                .font(.caption.bold())
+                .font(theme.captionBoldFont)
                 .foregroundColor(viewModel.selectedStatus == status ? .white : theme.primaryTextColor)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 6)
@@ -194,7 +205,7 @@ struct FeedbackListView: View {
             if config?.features.submissions.enabled == true {
                 Button(action: { showingSubmitSheet = true }) {
                     Text(l10n.submitButton)
-                        .font(.headline)
+                        .font(theme.headlineFont)
                         .foregroundColor(.white)
                         .padding(.horizontal, 24)
                         .padding(.vertical, 12)

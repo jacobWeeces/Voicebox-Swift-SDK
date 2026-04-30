@@ -13,12 +13,12 @@ struct VoteButton: View {
         Button(action: action) {
             VStack(spacing: 4) {
                 Image(systemName: isVoted ? "arrow.up.circle.fill" : "arrow.up.circle")
-                    .font(.title2)
+                    .font(theme.title2Font)
                     .foregroundColor(isVoted ? theme.accentColor : theme.secondaryTextColor)
 
                 if showCount {
                     Text("\(count)")
-                        .font(.caption.bold())
+                        .font(theme.captionBoldFont)
                         .foregroundColor(isVoted ? theme.accentColor : theme.secondaryTextColor)
                 }
             }

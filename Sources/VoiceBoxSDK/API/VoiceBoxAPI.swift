@@ -7,7 +7,7 @@ public final class VoiceBoxAPI {
 
     private let voicebox: VoiceBox
 
-    init(voicebox: VoiceBox = .shared) {
+    init(voicebox: VoiceBox) {
         self.voicebox = voicebox
     }
 
@@ -287,7 +287,7 @@ public final class VoiceBoxAPI {
 
         try await client.storage
             .from(bucket)
-            .upload(path: path, file: data, options: .init(contentType: "image/jpeg"))
+            .upload(path, data: data, options: .init(contentType: "image/jpeg"))
 
         let publicURL = try client.storage
             .from(bucket)

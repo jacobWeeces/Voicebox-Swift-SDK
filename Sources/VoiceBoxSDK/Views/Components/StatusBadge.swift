@@ -9,7 +9,7 @@ struct StatusBadge: View {
 
     var body: some View {
         Text(l10n.status(status))
-            .font(.caption2.bold())
+            .font(theme.caption2BoldFont)
             .foregroundColor(.white)
             .padding(.horizontal, 8)
             .padding(.vertical, 4)

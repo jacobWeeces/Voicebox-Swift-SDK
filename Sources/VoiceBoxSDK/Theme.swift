@@ -115,14 +115,44 @@ public struct Theme {
 
     // MARK: - Typography
 
-    /// Font for titles
+    /// Font for large titles (announcement detail heroes).
+    public var largeTitleFont: Font = .largeTitle.bold()
+
+    /// Font for primary titles (card titles, section headers).
     public var titleFont: Font = .headline
 
-    /// Font for body text
+    /// Font for title2 (vote counts, medium emphasis labels).
+    public var title2Font: Font = .title2
+
+    /// Font for title2 bold (empty-state titles, sheet headers).
+    public var title2BoldFont: Font = .title2.bold()
+
+    /// Font for title3 bold (list section headers, changelog version labels).
+    public var title3BoldFont: Font = .title3.bold()
+
+    /// Font for headlines (form field labels, primary buttons).
+    public var headlineFont: Font = .headline
+
+    /// Font for subheadlines (secondary buttons, supporting text).
+    public var subheadlineFont: Font = .subheadline
+
+    /// Font for subheadline bold (inline CTA labels).
+    public var subheadlineBoldFont: Font = .subheadline.bold()
+
+    /// Font for body text (descriptions, comments).
     public var bodyFont: Font = .body
 
-    /// Font for captions
+    /// Font for emphasized body text (inline links, lightly weighted body).
+    public var bodyEmphasizedFont: Font = .body.weight(.medium)
+
+    /// Font for captions (timestamps, secondary metadata).
     public var captionFont: Font = .caption
+
+    /// Font for bold captions (status labels, vote counts, badge text).
+    public var captionBoldFont: Font = .caption.bold()
+
+    /// Font for bold caption2 (status badges, tiny pill labels).
+    public var caption2BoldFont: Font = .caption2.bold()
 
     // MARK: - Spacing
 

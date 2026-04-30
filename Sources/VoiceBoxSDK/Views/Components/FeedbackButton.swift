@@ -64,7 +64,7 @@ struct FeedbackButtonView<Label: View>: View {
                     Image(systemName: "lightbulb")
                     Text(l10n.submitButton)
                 }
-                .font(.headline)
+                .font(theme.headlineFont)
                 .foregroundColor(.white)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 12)
@@ -76,7 +76,7 @@ struct FeedbackButtonView<Label: View>: View {
                     Image(systemName: "lightbulb.fill")
                     Text(l10n.submitButton)
                 }
-                .font(.subheadline.bold())
+                .font(theme.subheadlineBoldFont)
                 .foregroundColor(.white)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 10)
@@ -85,7 +85,7 @@ struct FeedbackButtonView<Label: View>: View {
 
             case .floating:
                 Image(systemName: "plus")
-                    .font(.title2.bold())
+                    .font(theme.title2BoldFont)
                     .foregroundColor(.white)
                     .frame(width: 56, height: 56)
                     .background(theme.accentColor)
@@ -97,7 +97,7 @@ struct FeedbackButtonView<Label: View>: View {
                     Image(systemName: "lightbulb")
                     Text(l10n.submitButton)
                 }
-                .font(.body)
+                .font(theme.bodyFont)
                 .foregroundColor(theme.accentColor)
             }
         }

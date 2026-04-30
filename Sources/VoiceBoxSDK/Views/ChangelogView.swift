@@ -19,6 +19,16 @@ struct VoiceBoxChangelogView: View {
                 }
             }
             .navigationTitle(l10n.changelogTab)
+            #if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+            #endif
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(l10n.changelogTab)
+                        .font(theme.titleFont)
+                        .foregroundColor(theme.primaryTextColor)
+                }
+            }
             .task {
                 await viewModel.loadChangelog()
             }
@@ -46,7 +56,7 @@ struct VoiceBoxChangelogView: View {
             HStack {
                 if let version = entry.version {
                     Text(version)
-                        .font(.caption.bold())
+                        .font(theme.captionBoldFont)
                         .foregroundColor(.white)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
@@ -65,7 +75,7 @@ struct VoiceBoxChangelogView: View {
 
             // Title
             Text(entry.title)
-                .font(.title3.bold())
+                .font(theme.title3BoldFont)
                 .foregroundColor(theme.primaryTextColor)
 
             // Body

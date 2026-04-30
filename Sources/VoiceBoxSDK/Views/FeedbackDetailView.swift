@@ -2,8 +2,16 @@
 import SwiftUI
 
 struct FeedbackDetailView: View {
-    let feedback: Feedback
+    let initialFeedback: Feedback
     @ObservedObject var viewModel: FeedbackViewModel
+
+    /// Derived from the viewModel's feedbackList so optimistic vote updates
+    /// (made by `viewModel.toggleVote`) immediately reflect in this view.
+    /// Falls back to the value captured at sheet presentation if the item
+    /// has been removed from the list.
+    private var feedback: Feedback {
+        viewModel.feedbackList.first(where: { $0.id == initialFeedback.id }) ?? initialFeedback
+    }
 
     @State private var commentText = ""
     @State private var isSubmittingComment = false
@@ -77,7 +85,7 @@ struct FeedbackDetailView: View {
             VStack(alignment: .leading, spacing: 8) {
                 // Title
                 Text(feedback.title)
-                    .font(.title2.bold())
+                    .font(theme.title2BoldFont)
                     .foregroundColor(theme.primaryTextColor)
 
                 // Status badge

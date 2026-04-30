@@ -73,7 +73,15 @@ struct SubmitFeedbackView: View {
             }
             .background(theme.backgroundColor)
             .navigationTitle(l10n.newRequestLabel)
+            #if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(l10n.newRequestLabel)
+                        .font(theme.titleFont)
+                        .foregroundColor(theme.primaryTextColor)
+                }
                 ToolbarItem(placement: .cancellationAction) {
                     Button(l10n.cancelButton) {
                         dismiss()
@@ -123,11 +131,11 @@ struct SubmitFeedbackView: View {
 
                 VStack(spacing: 8) {
                     Text("Share your email?")
-                        .font(.title2.bold())
+                        .font(theme.title2BoldFont)
                         .foregroundColor(theme.primaryTextColor)
 
                     Text("Get notified when we respond to your feedback or update its status.")
-                        .font(.subheadline)
+                        .font(theme.subheadlineFont)
                         .foregroundColor(theme.secondaryTextColor)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
@@ -136,7 +144,7 @@ struct SubmitFeedbackView: View {
                 VStack(spacing: 16) {
                     Toggle(isOn: $shareEmail) {
                         Text("Share my email")
-                            .font(.body)
+                            .font(theme.bodyFont)
                             .foregroundColor(theme.primaryTextColor)
                     }
                     .tint(theme.accentColor)
@@ -165,7 +173,7 @@ struct SubmitFeedbackView: View {
                     saveEmailPreferenceAndSubmit()
                 } label: {
                     Text("Continue")
-                        .font(.headline)
+                        .font(theme.headlineFont)
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background(theme.accentColor)
@@ -182,6 +190,11 @@ struct SubmitFeedbackView: View {
             .navigationBarTitleDisplayMode(.inline)
             #endif
             .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Before you submit")
+                        .font(theme.titleFont)
+                        .foregroundColor(theme.primaryTextColor)
+                }
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
                         showEmailPrompt = false

@@ -21,15 +21,15 @@ struct CommentRow: View {
                             Image(systemName: "checkmark.seal.fill")
                             Text(comment.developerName ?? l10n.developerBadge)
                         }
-                        .font(.caption.bold())
+                        .font(theme.captionBoldFont)
                         .foregroundColor(theme.accentColor)
                     } else {
                         Text(comment.developerName ?? l10n.developerBadge)
-                            .font(.caption.bold())
+                            .font(theme.captionBoldFont)
                     }
                 } else {
                     Text("User")
-                        .font(.caption)
+                        .font(theme.captionFont)
                         .foregroundColor(theme.secondaryTextColor)
                 }
 
@@ -37,7 +37,7 @@ struct CommentRow: View {
 
                 if config?.features.display.timestamps == true {
                     Text(l10n.timeAgo(comment.createdAt))
-                        .font(.caption)
+                        .font(theme.captionFont)
                         .foregroundColor(theme.tertiaryTextColor)
                 }
             }

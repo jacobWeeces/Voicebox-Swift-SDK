@@ -27,14 +27,14 @@ public struct AnnouncementBanner: View {
             // Optional header label
             if let headerLabel = config.headerLabel {
                 Text(headerLabel)
-                    .font(.caption.bold())
+                    .font(theme.captionBoldFont)
                     .foregroundColor(theme.secondaryTextColor)
             }
 
             // Title row with icon, chevron, and dismiss button
             HStack(spacing: 10) {
                 Image(systemName: "megaphone.fill")
-                    .font(.body)
+                    .font(theme.bodyFont)
                     .foregroundColor(theme.accentColor)
 
                 Text(announcement.title)
@@ -45,7 +45,7 @@ public struct AnnouncementBanner: View {
                 Spacer()
 
                 Image(systemName: "chevron.right")
-                    .font(.caption.weight(.semibold))
+                    .font(theme.captionBoldFont)
                     .foregroundColor(theme.accentColor)
 
                 if config.isDismissible {
@@ -53,7 +53,7 @@ public struct AnnouncementBanner: View {
                         onDismiss?()
                     } label: {
                         Image(systemName: "xmark")
-                            .font(.caption.bold())
+                            .font(theme.captionBoldFont)
                             .foregroundColor(theme.secondaryTextColor)
                     }
                 }

@@ -4,6 +4,7 @@ import SwiftUI
 struct FeedbackCard: View {
     let feedback: Feedback
     let onVote: () -> Void
+    var onTap: (() -> Void)? = nil
 
     @Environment(\.voiceBoxTheme) private var theme
     @Environment(\.voiceBoxLocalization) private var l10n
@@ -14,7 +15,7 @@ struct FeedbackCard: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
-            // Vote button
+            // Vote button - independent hit target so taps don't bubble to onTap
             if config?.features.voting.enabled == true {
                 VoteButton(
                     count: feedback.voteCount,
@@ -24,7 +25,7 @@ struct FeedbackCard: View {
                 )
             }
 
-            // Content
+            // Content - tappable area for navigation
             VStack(alignment: .leading, spacing: 8) {
                 // Title and status
                 HStack {
@@ -62,6 +63,11 @@ struct FeedbackCard: View {
                 }
                 .font(theme.captionFont)
                 .foregroundColor(theme.tertiaryTextColor)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                onTap?()
             }
         }
         .padding(theme.padding)
