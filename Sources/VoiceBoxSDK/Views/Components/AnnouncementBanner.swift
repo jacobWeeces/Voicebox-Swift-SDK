@@ -53,16 +53,22 @@ public struct AnnouncementBanner: View {
                         .font(theme.bodyFont)
                         .foregroundColor(theme.accentColor)
 
-                    Text(announcement.title)
-                        .font(config.titleFont ?? theme.titleFont)
-                        .foregroundColor(config.titleColor ?? theme.primaryTextColor)
-                        .lineLimit(1)
+                    // Tighter than the row spacing so the chevron reads as part
+                    // of the title phrase ("See All >") rather than a third
+                    // evenly-spaced item. The slack goes after it, separating
+                    // this from the dismiss button.
+                    HStack(spacing: 6) {
+                        Text(announcement.title)
+                            .font(config.titleFont ?? theme.titleFont)
+                            .foregroundColor(config.titleColor ?? theme.primaryTextColor)
+                            .lineLimit(1)
+
+                        Image(systemName: "chevron.right")
+                            .font(theme.captionBoldFont)
+                            .foregroundColor(theme.accentColor)
+                    }
 
                     Spacer(minLength: 8)
-
-                    Image(systemName: "chevron.right")
-                        .font(theme.captionBoldFont)
-                        .foregroundColor(theme.accentColor)
                 }
             }
             .padding(theme.padding)
