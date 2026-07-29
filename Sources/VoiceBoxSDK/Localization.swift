@@ -18,6 +18,14 @@ public struct Localization {
     public var commentButton: String = "Comment"
     public var sendButton: String = "Send"
 
+    // MARK: - Accessibility
+
+    /// VoiceOver label for the announcement banner's dismiss button.
+    public var dismissButton: String = "Dismiss"
+
+    /// VoiceOver hint for tapping the announcement banner.
+    public var announcementOpenHint: String = "Opens announcement details"
+
     // MARK: - Placeholders
 
     public var titlePlaceholder: String = "Feature title"
